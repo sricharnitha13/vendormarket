@@ -135,6 +135,19 @@ public class OrderService {
 
         orderRepository.save(order);
 
+        // Notify each distinct vendor whose products are in this order
+        orderItems.stream()
+                .map(oi -> oi.getProduct().getShop().getOwner())
+                .distinct()
+                .forEach(vendor -> notificationService.notify(
+                        vendor,
+                        NotificationType.ORDER_STATUS_CHANGED,
+                        "New order received",
+                        "You have a new order #" + order.getId() + " from " + user.getName() + ".",
+                        "ORDER",
+                        order.getId()
+                ));
+
         // Decrement stock for each ordered item
         for (OrderItem oi : orderItems) {
             Product product = oi.getProduct();

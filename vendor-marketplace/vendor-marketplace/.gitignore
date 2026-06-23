@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+
+###Environment Files ###
+
+.env
+.env.*
+application-local.properties
+
+###Logs ###
+
+*.log
