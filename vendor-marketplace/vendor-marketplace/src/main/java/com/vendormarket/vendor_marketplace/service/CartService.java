@@ -68,6 +68,7 @@ public class CartService {
         }
 
         if (quantity <= 0) {
+            cart.getItems().removeIf(i -> i.getId().equals(cartItemId));
             cartItemRepository.delete(item);
         } else {
             item.setQuantity(quantity);
@@ -88,6 +89,7 @@ public class CartService {
             throw new RuntimeException("Item does not belong to your cart");
         }
 
+        cart.getItems().removeIf(i -> i.getId().equals(cartItemId));
         cartItemRepository.delete(item);
         return buildCartResponse(cart);
     }
