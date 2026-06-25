@@ -42,10 +42,10 @@ const VendorDashboard = () => {
       .then((res) => setData(res.data))
       .finally(() => setLoading(false));
 
-    api.get("/shops/my")
+    api.get("/api/shops/my")
       .then((res) => {
         if (res.data && res.data.length > 0) {
-          return api.get(`/products/shop/${res.data[0].id}`);
+          return api.get(`/api/products/shop/${res.data[0].id}`);
         }
         return null;
       })

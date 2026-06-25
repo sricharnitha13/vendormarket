@@ -49,7 +49,7 @@ function App() {
       if (retrying) return;
       setRetrying(true);
       try {
-        await api.get("/shops");
+        await api.get("/api/shops");
         if (active) {
           setServerFailed(false);
           window.location.reload();
@@ -102,7 +102,7 @@ function App() {
             <button
               onClick={() => {
                 setRetrying(true);
-                api.get("/shops").then(() => {
+                api.get("/api/shops").then(() => {
                   setServerFailed(false);
                   window.location.reload();
                 }).catch(() => {

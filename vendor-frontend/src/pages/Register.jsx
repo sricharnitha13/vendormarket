@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
+import axios from "axios";
+
 
 const Register = () => {
   const navigate = useNavigate();
@@ -33,7 +35,10 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await api.post("/auth/register", form);
+    await axios.post(
+  "https://vendormarket-production-6883.up.railway.app/api/auth/register",
+  form
+);
       navigate("/login");
     } catch (err) {
       setError(extractErrorMessage(err));

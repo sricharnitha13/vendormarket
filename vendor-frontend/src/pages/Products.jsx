@@ -99,7 +99,7 @@ const Products = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get("/shops").then((res) => {
+    api.get("/api/shops").then((res) => {
       const unique = res.data.filter(
         (shop, index, self) => self.findIndex((s) => s.id === shop.id) === index
       );
@@ -110,7 +110,7 @@ const Products = () => {
     });
 
     if (user) {
-      api.get("/wishlist")
+      api.get("/api/wishlist")
         .then((res) => setWishlistIds(new Set(res.data.map((w) => w.productId))))
         .catch(() => {});
     }
@@ -121,14 +121,14 @@ const Products = () => {
           setForYou(res.data);
           setForYouLabel("✨ Recommended for You");
         } else {
-          api.get("/products/search").then((r) => {
+          api.get("/api/products/search").then((r) => {
             setForYou(r.data.slice(0, 8));
             setForYouLabel("You might also like");
           }).catch(() => {});
         }
       })
       .catch(() => {
-        api.get("/products/search").then((r) => {
+        api.get("/api/products/search").then((r) => {
           setForYou(r.data.slice(0, 8));
           setForYouLabel("Trending Products");
         }).catch(() => {});
@@ -144,7 +144,7 @@ const Products = () => {
     const isWishlisted = wishlistIds.has(product.id);
     try {
       if (isWishlisted) {
-        await api.delete(`/wishlist/remove/${product.id}`);
+        await api.delete(`/api/wishlist/remove/${product.id}`);
         setWishlistIds((prev) => {
           const next = new Set(prev);
           next.delete(product.id);
@@ -152,7 +152,7 @@ const Products = () => {
         });
         showToast("Removed from wishlist", "success");
       } else {
-        await api.post(`/wishlist/add/${product.id}`);
+        await api.post(`/api/wishlist/add/${product.id}`);
         setWishlistIds((prev) => new Set(prev).add(product.id));
         showToast("Added to wishlist ♥", "success");
       }
@@ -178,7 +178,7 @@ const Products = () => {
         const res = await api.post("/ai/search", { query: searchTerm });
         setSearchResults(res.data);
       } else {
-        const res = await api.get(`/products/search?keyword=${encodeURIComponent(searchTerm)}`);
+        const res = await api.get(`/api/products/search?keyword=${encodeURIComponent(searchTerm)}`);
         setSearchResults(res.data);
       }
     } catch {

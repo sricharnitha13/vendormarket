@@ -127,7 +127,7 @@ const ChatWidget = () => {
 
   const handleViewShop = (shop) => {
     setOpen(false);
-    navigate(`/shops/${shop.id}`);
+    navigate(`/api/shops/${shop.id}`);
   };
 
   const send = async () => {

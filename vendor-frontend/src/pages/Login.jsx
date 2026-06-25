@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-
+import axios from "axios";
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -13,7 +13,10 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await api.post("/auth/login", form);
+     const res = await axios.post(
+  "https://vendormarket-production-6883.up.railway.app/api/auth/login",
+  form
+);
       login(res.data);
       if (res.data.role === "VENDOR") {
         navigate("/vendor/shop");
