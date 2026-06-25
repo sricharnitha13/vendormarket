@@ -33,7 +33,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await api.post("/auth/register", form);
+      await api.post("/api/auth/register", form);
       navigate("/login");
     } catch (err) {
       setError(extractErrorMessage(err));
