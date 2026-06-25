@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await api.post("/auth/login", form);
+      const res = await api.post("/api/auth/login", form);
       login(res.data);
       if (res.data.role === "VENDOR") {
         navigate("/vendor/shop");
