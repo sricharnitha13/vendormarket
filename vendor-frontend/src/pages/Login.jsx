@@ -12,11 +12,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    try { console.log("LOGIN VERSION 999");
-     const res = await axios.post(
-  "https://vendormarket-production-6883.up.railway.app/api/auth/login",
-  form
-);
+    try {
+      const res = await api.post("/api/auth/login", form);
       login(res.data);
       if (res.data.role === "VENDOR") {
         navigate("/vendor/shop");

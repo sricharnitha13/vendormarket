@@ -35,10 +35,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-    await axios.post(
-  "https://vendormarket-production-6883.up.railway.app/api/auth/register",
-  form
-);
+      await api.post("/api/auth/register", form);
       navigate("/login");
     } catch (err) {
       setError(extractErrorMessage(err));
