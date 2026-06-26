@@ -47,6 +47,15 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        // Public shop endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/shops/**").permitAll()
+
+                        // Public product endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+
+                        // Public coupons
+                        .requestMatchers(HttpMethod.GET, "/api/coupons/**").permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/api/products").hasRole("VENDOR")
                         .requestMatchers(HttpMethod.POST, "/api/shops").hasRole("VENDOR")
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("VENDOR")
