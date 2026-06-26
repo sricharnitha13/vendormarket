@@ -80,9 +80,9 @@ const ShopProfile = () => {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      api.get(`api/shops/${id}`),
-      api.get(`api/products/shop/${id}`),
-      api.get(`api/coupons/available`, { params: { shopIds: id } }).catch(() => ({ data: [] }))
+      api.get(`shops/${id}`),
+      api.get(`products/shop/${id}`),
+      api.get(`coupons/available`, { params: { shopIds: id } }).catch(() => ({ data: [] }))
     ])
       .then(([shopRes, productsRes, couponsRes]) => {
         setShop(shopRes.data);
