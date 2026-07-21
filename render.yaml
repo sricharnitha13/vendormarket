@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: vendor-api
+    env: docker
+    rootDir: vendor-marketplace/vendor-marketplace
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vendor-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_API_URL
+        value: https://api.groq.com/openai/v1
+      - key: GROQ_MODEL
+        value: llama3-8b-8192
+
+  - type: web
+    name: vendor-frontend
+    env: static
+    rootDir: vendor-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: vendor-api
+          envVarKey: RENDER_EXTERNAL_URL
+
+databases:
+  - name: vendor-db
+    databaseName: vendordb
+    user: vendoruser
+    plan: free
