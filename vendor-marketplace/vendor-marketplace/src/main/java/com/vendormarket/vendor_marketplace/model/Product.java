@@ -29,7 +29,7 @@ public class Product {
 
     private String imageUrl;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "boolean default true")
     @Builder.Default
     private Boolean isActive = true;
 
