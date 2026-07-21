@@ -73,4 +73,12 @@ public class ShopController {
     public ResponseEntity<ShopDetailResponse> getShopDetail(@PathVariable Long id) {
         return ResponseEntity.ok(shopService.getShopDetail(id));
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<ShopResponse> updateShop(
+            @PathVariable Long id,
+            @Valid @RequestBody ShopRequest request) {
+        return ResponseEntity.ok(shopService.updateShop(id, request));
+    }
 }

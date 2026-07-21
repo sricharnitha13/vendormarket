@@ -37,6 +37,7 @@ public class ProductService {
                 .stock(request.getStock())
                 .imageUrl(request.getImageUrl())
                 .shop(shop)
+                .isActive(true)
                 .build();
         return toResponse(productRepository.save(product));
     }
@@ -44,7 +45,7 @@ public class ProductService {
     public List<ProductResponse> getProductsByShop(Long shopId) {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new RuntimeException("Shop not found"));
-        return productRepository.findByShop(shop)
+        return productRepository.findByShopAndIsActiveTrue(shop)
                 .stream().map(this::toResponse).collect(Collectors.toList());
     }
 
@@ -71,10 +72,13 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         validateOwnership(product.getShop());
-        productRepository.delete(product);
+        // Soft delete: mark inactive to preserve FK references in carts/orders
+        product.setIsActive(false);
+        productRepository.save(product);
     }
     public List<ProductResponse> searchProducts(String keyword, Double minPrice, Double maxPrice) {
         return productRepository.findAll().stream()
+                .filter(p -> Boolean.TRUE.equals(p.getIsActive()))
                 .filter(p -> keyword == null || keyword.isBlank() ||
                         p.getName().toLowerCase().contains(keyword.toLowerCase()) ||
                         (p.getDescription() != null && p.getDescription().toLowerCase().contains(keyword.toLowerCase())))
@@ -149,6 +153,12 @@ public class ProductService {
                 }
                 if (req.getStock() == null || req.getStock() < 0) {
                     throw new RuntimeException("Stock cannot be negative");
+                }
+                // Skip duplicates: check if a product with the same name already exists in this shop
+                if (req.getShopId() != null &&
+                        productRepository.existsByNameAndShopIdAndIsActiveTrue(req.getName(), req.getShopId())) {
+                    errors.add("Row " + (i + 2) + " (" + req.getName() + "): Skipped — product already exists in this shop");
+                    continue;
                 }
                 createProduct(req);
                 successCount++;

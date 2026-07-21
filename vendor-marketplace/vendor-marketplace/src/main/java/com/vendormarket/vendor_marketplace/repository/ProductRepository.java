@@ -10,9 +10,13 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByShop(Shop shop);
-    List<Product> findByShopId(Long shopId);
+    // Only return active (non-deleted) products
+    List<Product> findByShopAndIsActiveTrue(Shop shop);
+    List<Product> findByShopIdAndIsActiveTrue(Long shopId);
     long countByCategory(Category category);
+
+    // Used for duplicate detection in bulk upload
+    boolean existsByNameAndShopIdAndIsActiveTrue(String name, Long shopId);
 
     @Query("""
         SELECT p FROM Product p
@@ -20,6 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                   OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keywords, '%')))
         AND (:minPrice IS NULL OR p.price >= :minPrice)
         AND (:maxPrice IS NULL OR p.price <= :maxPrice)
+        AND p.isActive = true
         """)
     List<Product> searchWithFilters(
             @Param("keywords") String keywords,

@@ -46,6 +46,8 @@ public class SecurityConfig {
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
+                        // Allow all CORS preflight requests — must be first
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         // Public shop endpoints
                         .requestMatchers(HttpMethod.GET, "/api/shops/**").permitAll()
@@ -60,6 +62,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/shops").hasRole("VENDOR")
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("VENDOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("VENDOR")
+                        // Allow vendors to update their own shop
+                        .requestMatchers(HttpMethod.PUT, "/api/shops/**").hasAnyRole("VENDOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/orders/*/status").hasAnyRole("VENDOR", "ADMIN")
                         .requestMatchers("/test").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()

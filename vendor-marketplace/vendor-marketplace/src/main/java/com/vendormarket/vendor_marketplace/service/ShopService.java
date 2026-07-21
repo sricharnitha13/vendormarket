@@ -144,6 +144,20 @@ public class ShopService {
         return toResponse(shopRepository.save(shop));
     }
 
+    public ShopResponse updateShop(Long id, ShopRequest request) {
+        Shop shop = getShopOrThrow(id);
+        // Only the shop owner may update their own shop
+        User currentUser = getCurrentUser();
+        if (!shop.getOwner().getEmail().equals(currentUser.getEmail())) {
+            throw new RuntimeException("You do not own this shop");
+        }
+        shop.setName(request.getName());
+        shop.setDescription(request.getDescription());
+        shop.setAddress(request.getAddress());
+        shop.setCategory(request.getCategory());
+        return toResponse(shopRepository.save(shop));
+    }
+
     private Shop getShopOrThrow(Long id) {
         return shopRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Shop not found"));

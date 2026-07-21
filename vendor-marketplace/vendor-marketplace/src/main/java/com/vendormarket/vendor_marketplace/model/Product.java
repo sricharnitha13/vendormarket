@@ -29,6 +29,10 @@ public class Product {
 
     private String imageUrl;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isActive = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
@@ -46,6 +50,7 @@ public class Product {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+        if (isActive == null) isActive = true;
     }
 
     @PreUpdate
