@@ -38,7 +38,7 @@ const VendorProducts = () => {
       .then((res) => {
         if (res) setProducts(res.data);
       })
-      .catch(() => setShop(null))
+      .catch((err) => console.error("Error fetching shop/products", err))
       .finally(() => setLoading(false));
   }, []);
 
