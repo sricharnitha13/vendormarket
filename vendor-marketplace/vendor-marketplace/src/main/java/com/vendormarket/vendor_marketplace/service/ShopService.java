@@ -27,6 +27,9 @@ public class ShopService {
 
     public ShopResponse createShop(ShopRequest request) {
         User owner = getCurrentUser();
+        if (!shopRepository.findByOwner(owner).isEmpty()) {
+            throw new IllegalStateException("You already have a registered shop.");
+        }
         Shop shop = Shop.builder()
                 .name(request.getName())
                 .description(request.getDescription())

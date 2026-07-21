@@ -118,7 +118,6 @@ const Register = () => {
             >
               <option value="CUSTOMER">Customer (to shop products)</option>
               <option value="VENDOR">Vendor (to sell products)</option>
-              <option value="ADMIN">Admin (Platform Manager)</option>
             </select>
           </div>
 
